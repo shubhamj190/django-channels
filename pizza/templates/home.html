@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+<div class="container mt-5 mb-5">
+<div class="row">
+    {% for pizza in pizzas %}
+    <div class="col-md-4">
+        <div class="card" >
+            <img src={{pizza.image}} class="card-img-top img-fluid" alt="...">
+            <div class="card-body">
+            <h5 class="card-title">{{pizza.name}}</h5>
+            <h5 class="card-desc"> &#2352;  {{pizza.price}}</h5>
+            <button onclick="createOrder({{pizza.id}})" class="btn btn-primary" type="button">Purchase</button>
+            </div>
+        </div>
+      </div>
+      {% endfor %}
+</div>
+
+<h1 class="text-light mt-5 mb-5 text-center">All orders</h1>
+<table class="table text-light">
+    <thead>
+      <tr>
+        <th scope="col">Order Id</th>
+        <th scope="col">Date Purchased</th>
+        <th scope="col">Status</th>
+        <th scope="col">Total</th>
+        <th scope="col">View</th>
+      </tr>
+    </thead>
+    <tbody>
+        {% for order in orders %}
+      <tr>
+        <th scope="row">{{order.order_id}}</th>
+        <td>{{order.date}}</td>
+        <td>{{order.status}}</td>
+        <td>{{order.amount}}</td>
+        <td><a href="/{{order.order_id}}" class="btn btn-danger btn-sm">View</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+</div>
+
+{% endblock body %}
+
+{% block js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.25.0/axios.min.js" integrity="sha512-/Q6t3CASm04EliI1QyIDAA/nDo9R8FQ/BULoUFyN4n/BDdyIxeH7u++Z+eobdmr11gG5D/6nPFyDlnisDwhpYA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+
+    function createOrder(id){
+        axios.post('/api/order', {'id':id})
+        .then(res=>{
+            console.log(res)
+
+            if(res.state == "true"){
+                window.location.reload()
+                console.log(res)
+            }
+        })
+    }
+
+</script>
+{% endblock js %}
